@@ -1,2 +1,5 @@
 server/node_modules
 server/dist
+server/nodemon.json
+client/node_modules
+client/src/react-app-env.d.ts
