@@ -5,7 +5,7 @@ import { IUser } from "../types/user"
 export const getUsers = async (_req: Request, res: Response): Promise<void> => {
   try {
     const users: IUser[] = await User.find();
-    res.status(200).json(JSON.stringify(users));
+    res.status(200).json(users);
   } catch (error) {
     throw error;
   }
