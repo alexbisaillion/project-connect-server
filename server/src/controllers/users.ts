@@ -1,6 +1,7 @@
 import { Response, Request } from "express"
 import User from "../models/user"
 import { IUser } from "../types/user"
+import { Attribute, Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 
 export const getUsers = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -11,17 +12,39 @@ export const getUsers = async (_req: Request, res: Response): Promise<void> => {
   }
 }
 
-export const addUser = async (_req: Request, res: Response): Promise<void> => {
+export const addUser = async (req: Request, res: Response): Promise<void> => {
   try {
+    const data = req.body;
+    
     const newUser: IUser = new User({
-      name: "Ethan Hunt",
-      address: "Worldwide"
-    })
+      username: data.username,
+      name: data.name,
+      age: data.age,
+      region: data.region,
+      currentPosition: data.currentPosition,
+      currentCompany: data.currentCompany,
+      education: data.education,
+      industry: data.industry,
+      skills: initializeAttributes(data.skills, Object.keys(Skill)),
+      programmingLanguages: initializeAttributes(data.programmingLanguages, Object.keys(ProgrammingLanguage)),
+      frameworks: initializeAttributes(data.frameworks, Object.keys(Framework)),
+    });
+    const savedUser = await newUser.save();
 
-    await newUser.save();
-
-    res.status(201).json(JSON.stringify(newUser));
+    res.status(201).json(savedUser);
   } catch (error) {
-    throw error;
+    res.status(401).json(error);
   }
+}
+
+const initializeAttributes = (attributes: string[], validAttributes: string[]): Attribute[] => {
+    // Reduce getting error here...
+    const acceptedAttributes: Attribute[] = [];
+    attributes.forEach(skill => {
+      if (validAttributes.includes(skill)) {
+        acceptedAttributes.push({ name: skill, votes: 0});
+      }
+    });
+  
+    return acceptedAttributes;  
 }
