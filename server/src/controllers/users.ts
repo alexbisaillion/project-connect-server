@@ -8,7 +8,7 @@ export const getUsers = async (_req: Request, res: Response): Promise<void> => {
     const users: IUser[] = await User.find();
     res.status(200).json(users);
   } catch (error) {
-    throw error;
+    res.status(401).json(error);
   }
 }
 

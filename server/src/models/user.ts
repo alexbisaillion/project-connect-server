@@ -3,7 +3,7 @@ import { model, Schema } from "mongoose";
 
 const AttributeSchema = new Schema({ name: String, votes: Number});
 
-const UserSchema = new Schema(
+export const UserSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
     name: { type: String, required: true },
