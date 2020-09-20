@@ -37,6 +37,7 @@ export enum ProgrammingLanguage {
 export enum Framework {
   ReactJS = "ReactJS",
   ReactNative = "ReactNative",
+  Angular = "Angular",
   NodeJS = "NodeJS",
   Bootstrap = "Bootstrap",
   NativeScript = "NativeScript"

@@ -1,4 +1,4 @@
-import { IUser } from "./../types/user";
+import { IUser } from "../types/user";
 import { model, Schema } from "mongoose";
 
 const AttributeSchema = new Schema({ name: String, votes: Number});
@@ -16,6 +16,8 @@ export const UserSchema = new Schema(
     skills: { type: [AttributeSchema], required: true },
     programmingLanguages: { type: [AttributeSchema], required: true },
     frameworks: { type: [AttributeSchema], required: true },
+    projects: { type: [String], required: true },
+    invitations: { type: [String], required: true }
   }
 )
 

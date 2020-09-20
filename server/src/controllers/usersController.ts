@@ -1,5 +1,5 @@
 import { Response, Request } from "express"
-import User from "../models/user"
+import User from "../models/userModel"
 import { IUser } from "../types/user"
 import { Attribute, Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 
@@ -28,6 +28,8 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
       skills: initializeAttributes(data.skills, Object.keys(Skill)),
       programmingLanguages: initializeAttributes(data.programmingLanguages, Object.keys(ProgrammingLanguage)),
       frameworks: initializeAttributes(data.frameworks, Object.keys(Framework)),
+      projects: [],
+      invitations: []
     });
     const savedUser = await newUser.save();
 

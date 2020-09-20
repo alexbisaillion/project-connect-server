@@ -13,4 +13,6 @@ export interface IUser extends Document {
   skills: Attribute[];
   programmingLanguages: Attribute[];
   frameworks: Attribute[];
+  projects: string[];
+  invitations: string[];
 }
