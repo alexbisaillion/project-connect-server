@@ -1,13 +1,13 @@
 import { Document } from "mongoose"
-import { Attribute } from "./attributes";
+import { Attribute, Employment } from "./attributes";
 
 export interface IUser extends Document {
   username: string;
   name: string;
   region: string;
   age: number;
-  currentPosition: string;
-  currentCompany: string;
+  currentEmployment: Employment;
+  pastEmployment: Employment[];
   education: string;
   industry: string;
   skills: Attribute[];

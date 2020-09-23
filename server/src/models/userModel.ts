@@ -2,6 +2,7 @@ import { IUser } from "../types/user";
 import { model, Schema } from "mongoose";
 
 const AttributeSchema = new Schema({ name: String, votes: Number});
+const EmploymentSchema = new Schema({ company: String, position: String});
 
 export const UserSchema = new Schema(
   {
@@ -9,8 +10,8 @@ export const UserSchema = new Schema(
     name: { type: String, required: true },
     region: { type: String, required: true },
     age: { type: Number, required: false },
-    currentPosition: { type: String, required: false },
-    currentCompany: { type: String, required: false },
+    currentEmployment: { type: EmploymentSchema, required: false },
+    pastEmployment: { type: [EmploymentSchema], required: false},
     education: { type: String, required: false},
     industry: { type: String, required: true },
     skills: { type: [AttributeSchema], required: true },

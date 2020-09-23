@@ -3,6 +3,11 @@ export type Attribute = {
   votes: number;
 }
 
+export type Employment = {
+  company: string;
+  position: string;
+}
+
 export enum Skill {
   ObjectOrientedDevelopment = "ObjectOrientedDevelopment",
   WebDevelopment = "WebDevelopment",
