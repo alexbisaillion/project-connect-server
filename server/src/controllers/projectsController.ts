@@ -4,6 +4,19 @@ import User from "../models/userModel"
 import { Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 import { IProject } from "../types/project"
 
+export const getProject = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const project = await Project.findOne({ name: req.params.name});
+    if (project == null) {
+      res.status(401).json({ error: "Unable to find project"});
+      return;
+    }
+    res.status(200).json(project);
+  } catch (error) {
+    res.status(401).json(error);
+  } 
+}
+
 export const getProjects = async (_req: Request, res: Response): Promise<void> => {
   try {
     const users: IProject[] = await Project.find();

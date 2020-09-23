@@ -3,6 +3,19 @@ import User from "../models/userModel"
 import { IUser } from "../types/user"
 import { Attribute, Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 
+export const getUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await User.findOne({ username: req.params.username});
+    if (user == null) {
+      res.status(401).json({ error: "Unable to find user"});
+      return;
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(401).json(error);
+  } 
+}
+
 export const getUsers = async (_req: Request, res: Response): Promise<void> => {
   try {
     const users: IUser[] = await User.find();
