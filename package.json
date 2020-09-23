@@ -2,6 +2,6 @@
   "name": "project-recommender",
   "version": "0.0.0",
   "scripts": {
-    "start": "cd server && npm install && yarn start"
+    "start": "cd server && yarn install && yarn start"
   }
 }
