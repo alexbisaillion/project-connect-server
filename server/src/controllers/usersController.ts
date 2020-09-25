@@ -31,6 +31,7 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
     
     const newUser: IUser = new User({
       username: data.username,
+      password: data.password,
       name: data.name,
       age: data.age,
       region: data.region,

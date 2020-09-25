@@ -3,6 +3,7 @@ import { Attribute, Employment } from "./attributes";
 
 export interface IUser extends Document {
   username: string;
+  password: string;
   name: string;
   region: string;
   age: number;
