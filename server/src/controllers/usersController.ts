@@ -5,7 +5,7 @@ import { Attribute, Framework, ProgrammingLanguage, Skill } from "../types/attri
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const user = await User.findOne({ username: req.params.username});
+    const user = await User.findOne({ username: req.params.username}, { password: 0 });
     if (user == null) {
       res.status(401).json({ error: "Unable to find user"});
       return;
@@ -18,7 +18,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
 
 export const getUsers = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const users: IUser[] = await User.find();
+    const users: IUser[] = await User.find({}, { password: 0 });
     res.status(200).json(users);
   } catch (error) {
     res.status(401).json(error);
@@ -47,7 +47,7 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
     });
     const savedUser = await newUser.save();
 
-    res.status(201).json(savedUser);
+    res.status(201).json({ success: true });
   } catch (error) {
     res.status(401).json(error);
   }
