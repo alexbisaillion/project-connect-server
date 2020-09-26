@@ -39,9 +39,9 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
       pastEmployment: data.pastEmployment,
       education: data.education,
       industry: data.industry,
-      skills: initializeAttributes(data.skills, Object.keys(Skill)),
-      programmingLanguages: initializeAttributes(data.programmingLanguages, Object.keys(ProgrammingLanguage)),
-      frameworks: initializeAttributes(data.frameworks, Object.keys(Framework)),
+      skills: initializeAttributes(data.skills, Object.values(Skill)),
+      programmingLanguages: initializeAttributes(data.programmingLanguages, Object.values(ProgrammingLanguage)),
+      frameworks: initializeAttributes(data.frameworks, Object.values(Framework)),
       projects: [],
       invitations: []
     });

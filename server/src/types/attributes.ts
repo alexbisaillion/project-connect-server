@@ -9,13 +9,13 @@ export type Employment = {
 }
 
 export enum Skill {
-  ObjectOrientedDevelopment = "ObjectOrientedDevelopment",
-  WebDevelopment = "WebDevelopment",
-  OperatingSystems = "OperatingSystems",
-  MachineLearning = "MachineLearning",
-  DataScience = "DataScience",
+  ObjectOrientedDevelopment = "Object Oriented Development",
+  WebDevelopment = "Web Development",
+  OperatingSystems = "Operating Systems",
+  MachineLearning = "Machine Learning",
+  DataScience = "Data Science",
   Analytics = "Analytics",
-  ArtificialIntelligence = "ArtificialIntelligence",
+  ArtificialIntelligence = "Artificial Intelligence",
   Management = "Management",
   Agile = "Agile"
 };
@@ -40,10 +40,10 @@ export enum ProgrammingLanguage {
 }
 
 export enum Framework {
-  ReactJS = "ReactJS",
-  ReactNative = "ReactNative",
+  ReactJS = "React JS",
+  ReactNative = "React Native",
   Angular = "Angular",
-  NodeJS = "NodeJS",
+  NodeJS = "Node.js",
   Bootstrap = "Bootstrap",
   NativeScript = "NativeScript"
 }
