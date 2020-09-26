@@ -13,10 +13,12 @@ export const Users = () => {
   }, []);
 
   return (
-    <div>
-      {users.map((user: IUser) => {
-        return <div key={user.name}>{user.name}</div>
-      })}
-    </div>
+    <h1>Hello</h1>
   );
 }
+
+{/* <div>
+{users.map((user: IUser) => {
+  return <div key={user.name}>{user.name}</div>
+})}
+</div> */}
