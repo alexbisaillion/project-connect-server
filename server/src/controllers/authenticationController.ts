@@ -4,7 +4,7 @@ import User from "../models/userModel"
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.session) {
-      res.status(401).json({ error: "Could not retrieve the session" });
+      res.status(401).json({ success: false, error: "Could not retrieve the session" });
       return;
     }
 
@@ -17,7 +17,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ username: data.username, password: data.password });
     if (user === null) {
       req.session.isLoggedIn = false;
-      res.status(401).json({ error: "Incorrect credentials" });
+      res.status(401).json({ success: false, error: "Incorrect credentials" });
     } else {
       req.session.isLoggedIn = true;
       req.session.username = data.username;
@@ -25,6 +25,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       res.status(201).json({ success: true });
     }
   } catch (error) {
-    res.status(401).json(error);
+    res.status(401).json({ success: false, error });
   } 
+}
+
+export const isLoggedIn = async (req: Request, res: Response): Promise<void> => {
+  res.status(200).json({ isLoggedIn: !!req.session && req.session.isLoggedIn === true });
 }

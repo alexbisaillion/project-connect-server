@@ -1,11 +1,12 @@
 import { Router } from "express";;
 import { addUser, getUser, getUsers } from "../controllers/usersController"
 import { getProjects, addProject, registerInProject, inviteToProject, getProject } from "../controllers/projectsController";
-import { login } from "../controllers/authenticationController";
+import { isLoggedIn, login } from "../controllers/authenticationController";
 
 const router: Router = Router();
 
 router.post("/login", login);
+router.get("/isLoggedIn", isLoggedIn);
 router.get("/user/:username", getUser);
 router.get("/users", getUsers);
 router.post("/addUser", addUser);
