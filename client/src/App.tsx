@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter, Redirect, Route } from 'react-router-dom'
+import { attributeManager } from './attributeManager';
 import { authenticationManager } from './authenticationManager';
+import { Register } from './components/pages/Register';
 import { SignIn } from './components/pages/SignIn';
 import { Users } from './components/Users'
 
@@ -10,9 +12,12 @@ export const App = () => {
   useEffect(() => {
     async function initialize() {
       await authenticationManager.init();
+      await attributeManager.init();
       setIsInitialized(true);
     }
-    initialize();
+    if (!isInitialized) {
+      initialize();
+    }
   });
 
   if (!isInitialized) {
@@ -21,7 +26,8 @@ export const App = () => {
   return (
     <BrowserRouter>
       <Route path="/login" component={SignIn} />
-      <Route path="/home" component={DummyHomePage} />
+      <Route path="/register" component={Register} />
+      <AuthenticatedRouter path="/home" component={DummyHomePage} />
       <AuthenticatedRouter path="/users" component={Users} />
     </BrowserRouter>
   );
@@ -37,8 +43,6 @@ type AuthenticatedRouterProps = {
 }
 export const AuthenticatedRouter = (props: AuthenticatedRouterProps) => {
   const { component: Component, path } = props;
-
-  console.log(authenticationManager.getIsLoggedIn());
 
   return (
     <Route

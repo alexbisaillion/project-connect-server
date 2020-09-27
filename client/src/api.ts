@@ -29,3 +29,30 @@ export const login = async (username: string, password: string): Promise<AxiosRe
     throw new Error(error);
   }
 }
+
+export const getSkills = async () : Promise<AxiosResponse<string[]>> => {
+  try {
+    const skills: AxiosResponse<string[]> = await axios.get(baseUrl + "/skills");
+    return skills;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export const getProgrammingLanguages = async () : Promise<AxiosResponse<string[]>> => {
+  try {
+    const programmingLanguages: AxiosResponse<string[]> = await axios.get(baseUrl + "/programmingLanguages");
+    return programmingLanguages;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export const getFrameworks = async () : Promise<AxiosResponse<string[]>> => {
+  try {
+    const frameworks: AxiosResponse<string[]> = await axios.get(baseUrl + "/frameworks");
+    return frameworks;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
