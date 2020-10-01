@@ -49,6 +49,8 @@ export const Register = () => {
   const [displayName, setDisplayName] = React.useState<string>("");
   const [age, setAge] = React.useState<number>(-1);
   const [region, setRegion] = React.useState<string>("");
+  const [education, setEducation] = React.useState<string>("");
+  const [industry, setIndustry] = React.useState<string>("");
   const [currentPosition, setCurrentPosition] = React.useState<Position>({ company: "", position: ""});
   const [pastPositions, setPastPositions] = React.useState<Position[]>([]);
   const [selectedSkills, setSelectedSkills] = React.useState<string[]>([]);
@@ -64,11 +66,11 @@ export const Register = () => {
     return (
       <>
         <Typography variant="h4">Basic Information</Typography>
-        <TextField fullWidth variant="outlined" label="Username" name="username" autoFocus value={username} onChange={(e) => setUsername(e.target.value)} error={username.length <= 0}/>
-        <TextField fullWidth variant="outlined" label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} error={password.length <= 0}/>
-        <TextField fullWidth variant="outlined" label="Display Name" name="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} error={displayName.length <= 0}/>
-        <TextField fullWidth variant="outlined" label="Age" name="age" type="number" value={age < 0 ? "" : age} onChange={(e) => setAge(Number(e.target.value))} error={age < 0}/>
-        <TextField fullWidth variant="outlined" label="Region" name="region" value={region} onChange={(e) => setRegion(e.target.value)} error={region.length <= 0}/>
+        <TextField fullWidth variant="outlined" label="Username" autoFocus value={username} onChange={(e) => setUsername(e.target.value)} error={username.length <= 0}/>
+        <TextField fullWidth variant="outlined" label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} error={password.length <= 0}/>
+        <TextField fullWidth variant="outlined" label="Display Name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} error={displayName.length <= 0}/>
+        <TextField fullWidth variant="outlined" label="Age" type="number" value={age < 0 ? "" : age} onChange={(e) => setAge(Number(e.target.value))} error={age < 0}/>
+        <TextField fullWidth variant="outlined" label="Region" value={region} onChange={(e) => setRegion(e.target.value)} error={region.length <= 0}/>
         <Button
           fullWidth
           variant="contained"
@@ -95,9 +97,11 @@ export const Register = () => {
     return (
       <>
         <Typography variant="h4">Experience</Typography>
+        <TextField fullWidth variant="outlined" label="Education" value={education} onChange={(e) => setEducation(e.target.value)} error={education.length <= 0}/>
+        <TextField fullWidth variant="outlined" label="Industry" value={industry} onChange={(e) => setIndustry(e.target.value)} error={industry.length <= 0}/>
         <DoubleInput>
-          <TextField fullWidth variant="outlined" label="Current Company" name="region" onChange={e => setCurrentPosition({ company: e.target.value, position: currentPosition.position })}/>
-          <TextField fullWidth variant="outlined" label="Position" name="region" onChange={e => setCurrentPosition({ company: currentPosition.company, position: e.target.value })}/>
+          <TextField fullWidth variant="outlined" label="Current Company" onChange={e => setCurrentPosition({ company: e.target.value, position: currentPosition.position })}/>
+          <TextField fullWidth variant="outlined" label="Position" onChange={e => setCurrentPosition({ company: currentPosition.company, position: e.target.value })}/>
         </DoubleInput>
         <Typography component="p">Past Employment</Typography>
         {pastPositions.map((employment, index) => {
@@ -107,7 +111,6 @@ export const Register = () => {
                 fullWidth
                 variant="outlined"
                 label="Company"
-                name="region"
                 value={employment.company}
                 onChange={e => updatePastPosition(index, { position: employment.position, company: e.target.value})}
               />
@@ -115,7 +118,6 @@ export const Register = () => {
                 fullWidth
                 variant="outlined"
                 label="Position"
-                name="region"
                 value={employment.position}
                 onChange={e => updatePastPosition(index, { position: e.target.value, company: employment.company})}
               />
@@ -129,6 +131,8 @@ export const Register = () => {
           color="primary"
           onClick={() => setView(RegisterState.Skills)}
           disabled={
+            education.length <= 0 ||
+            industry.length <= 0 ||
             currentPosition.company.length <= 0 ||
             currentPosition.position.length <= 0 ||
             (pastPositions.length > 0 && pastPositions.filter(employment => employment.position.length <= 0 || employment.company.length <= 0).length > 0)
@@ -218,6 +222,29 @@ export const Register = () => {
             )
           })}
         </SkillBox>
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            console.log({
+              username,
+              password,
+              displayName,
+              age,
+              region,
+              education,
+              industry,
+              currentPosition,
+              pastPositions,
+              selectedSkills,
+              selectedProgrammingLanguages,
+              selectedFrameworks
+            });
+          }}
+        >
+          Complete Registration
+        </Button>
       </>
     );
   }
