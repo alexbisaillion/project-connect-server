@@ -13,3 +13,12 @@ interface ILogin {
   success: boolean;
   message?: string;
 }
+
+type Employment = {
+  position: string;
+  company: string;
+}
+
+type SuccessResponse = {
+  success: boolean;
+}

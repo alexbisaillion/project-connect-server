@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Button, Container, CssBaseline, TextField, Typography, Chip } from "@material-ui/core";
 import { attributeManager } from "../../attributeManager";
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { register } from "../../api";
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -226,27 +227,30 @@ export const Register = () => {
           fullWidth
           variant="contained"
           color="primary"
-          onClick={() => {
-            console.log({
-              username,
-              password,
-              displayName,
-              age,
-              region,
-              education,
-              industry,
-              currentPosition,
-              pastPositions,
-              selectedSkills,
-              selectedProgrammingLanguages,
-              selectedFrameworks
-            });
-          }}
+          onClick={() => attemptRegistration()}
         >
           Complete Registration
         </Button>
       </>
     );
+  }
+
+  const attemptRegistration = async () => {
+    const result = await register({
+      username,
+      password,
+      name: displayName,
+      age,
+      region,
+      education,
+      industry,
+      currentEmployment: currentPosition,
+      pastEmployment: pastPositions,
+      skills: selectedSkills,
+      programmingLanguages: selectedProgrammingLanguages,
+      frameworks: selectedFrameworks
+    });
+    console.log(result);
   }
 
   return (
