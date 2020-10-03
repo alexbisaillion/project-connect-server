@@ -28,12 +28,12 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://localhost:3000',
-    'http://project-connect-server.herokuapp.com',
-    'https://project-connect-server.herokuapp.com'
+    'http://project-connect-client.herokuapp.com',
+    'https://project-connect-client.herokuapp.com'
   ],
   credentials: true,
   exposedHeaders: ['set-cookie']
-}))
+}));
 
 app.use(express.json());
 app.use(allRoutes);
