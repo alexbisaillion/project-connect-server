@@ -30,5 +30,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const isLoggedIn = async (req: Request, res: Response): Promise<void> => {
-  res.status(200).json({ isLoggedIn: !!req.session && req.session.isLoggedIn === true });
+  res.status(200).json({
+    isLoggedIn: !!req.session && req.session.isLoggedIn === true,
+    username: !!req.session && req.session.username ? req.session.username : "",
+  });
 }

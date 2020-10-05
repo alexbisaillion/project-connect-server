@@ -40,9 +40,9 @@ export const addProject = async (req: Request, res: Response): Promise<void> => 
       name: data.name,
       users: [data.creator],
       invitees: [],
-      skills: initializeAttributes(data.skills, Object.keys(Skill)),
-      programmingLanguages: initializeAttributes(data.programmingLanguages, Object.keys(ProgrammingLanguage)),
-      frameworks: initializeAttributes(data.frameworks, Object.keys(Framework)),
+      skills: initializeAttributes(data.skills, Object.values(Skill)),
+      programmingLanguages: initializeAttributes(data.programmingLanguages, Object.values(ProgrammingLanguage)),
+      frameworks: initializeAttributes(data.frameworks, Object.values(Framework)),
       startDate: new Date(),
       isInProgress: true
     });
@@ -50,7 +50,7 @@ export const addProject = async (req: Request, res: Response): Promise<void> => 
     
     await creator.update({ $push: { projects: data.name }});
   
-    res.status(201).json(savedProject);  
+    res.status(201).json({ success: true });  
   } catch (error) {
     res.status(401).json(error);
   } 
