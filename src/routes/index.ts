@@ -1,12 +1,13 @@
 import { Router } from "express";;
 import { addUser, getUser, getUsers } from "../controllers/usersController"
 import { getProjects, addProject, registerInProject, inviteToProject, getProject } from "../controllers/projectsController";
-import { isLoggedIn, login } from "../controllers/authenticationController";
+import { isLoggedIn, login, logout } from "../controllers/authenticationController";
 import { getFrameworks, getProgrammingLanguages, getSkills } from "../controllers/attributeController";
 
 const router: Router = Router();
 
 router.post("/login", login);
+router.post("/logout", logout);
 router.get("/isLoggedIn", isLoggedIn);
 router.get("/user/:username", getUser);
 router.get("/users", getUsers);

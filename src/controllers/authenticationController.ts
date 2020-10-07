@@ -35,3 +35,16 @@ export const isLoggedIn = async (req: Request, res: Response): Promise<void> => 
     username: !!req.session && req.session.username ? req.session.username : "",
   });
 }
+
+export const logout = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (req.session) {
+      req.session.isLoggedIn = false;
+      req.session.username = undefined;
+      req.session.password = undefined;
+    }
+    res.status(201).json({ success: true });
+  } catch (error) {
+    res.status(401).json({ success: false, error });
+  } 
+}
