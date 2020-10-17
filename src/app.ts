@@ -32,9 +32,8 @@ app.use(cors({
     'https://project-connect-client.herokuapp.com'
   ],
   credentials: true,
-  exposedHeaders: ['set-cookie'],
   methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', '*']
+  allowedHeaders: ['Content-Type', 'Set-Cookie']
 }));
 
 app.use(express.json());
