@@ -18,10 +18,7 @@ app.use(session({
   cookie: { 
     maxAge: 600000,
     secure: false,
-  },
-  saveUninitialized: false,
-  resave: false,
-  unset: 'destroy'
+  }
 }));
 
 app.use(cors({
