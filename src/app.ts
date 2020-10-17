@@ -11,6 +11,7 @@ const app: Express = express();
 const PORT: string | number = process.env.PORT || 4000;
 
 const uri: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.iwq4h.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
+app.set('trust proxy', 1);
 app.use(cookieParser());
 app.use(session({
   secret: process.env.SECRET || "",
