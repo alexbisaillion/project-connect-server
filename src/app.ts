@@ -17,9 +17,9 @@ app.use(session({
   store: new MongoDBStore({ uri, collection: "sessions"}),
   cookie: { 
     maxAge: 600000,
-    secure: true,
+    secure: false,
     sameSite: "none"
-  }
+  },
 }));
 
 app.use(cors({
