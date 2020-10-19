@@ -19,7 +19,8 @@ export const UserSchema = new Schema(
     programmingLanguages: { type: [AttributeSchema], required: true },
     frameworks: { type: [AttributeSchema], required: true },
     projects: { type: [String], required: true },
-    invitations: { type: [String], required: true }
+    invitations: { type: [String], required: true },
+    bio: { type: String, required: false }
   }
 )
 

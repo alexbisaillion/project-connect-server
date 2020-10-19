@@ -43,7 +43,8 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
       programmingLanguages: initializeAttributes(data.programmingLanguages, Object.values(ProgrammingLanguage)),
       frameworks: initializeAttributes(data.frameworks, Object.values(Framework)),
       projects: [],
-      invitations: []
+      invitations: [],
+      bio: data.bio
     });
     const savedUser = await newUser.save();
 
