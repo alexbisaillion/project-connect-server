@@ -44,7 +44,8 @@ export const addProject = async (req: Request, res: Response): Promise<void> => 
       programmingLanguages: initializeAttributes(data.programmingLanguages, Object.values(ProgrammingLanguage)),
       frameworks: initializeAttributes(data.frameworks, Object.values(Framework)),
       startDate: new Date(),
-      isInProgress: true
+      isInProgress: true,
+      description: data.description
     });
     const savedProject = await newProject.save();
     

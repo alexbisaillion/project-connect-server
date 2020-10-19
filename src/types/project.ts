@@ -10,4 +10,5 @@ export interface IProject extends Document {
   startDate: Date;
   isInProgress: boolean;
   completionDate?: Date;
+  description: string;
 }

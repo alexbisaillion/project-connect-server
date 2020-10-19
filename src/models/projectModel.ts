@@ -11,7 +11,8 @@ export const ProjectSchema = new Schema(
     frameworks: { type: [String], required: true },
     startDate: { type: Date, required: true },
     isInProgress: { type: Boolean, required: true },
-    completionDate: { type: Date, required: false }
+    completionDate: { type: Date, required: false },
+    description: { type: String, required: true }
   }
 )
 
