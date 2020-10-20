@@ -2,6 +2,7 @@ import { Document } from "mongoose"
 
 export interface IProject extends Document {
   name: string;
+  creator: string;
   users: string[];
   invitees: string[];
   skills: string[];

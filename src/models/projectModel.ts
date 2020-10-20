@@ -4,6 +4,7 @@ import { model, Schema } from "mongoose";
 export const ProjectSchema = new Schema(
   {
     name: { type: String, required: true, unique: true },
+    creator: { type: String, required: true },
     users: { type: [String], required: true },
     invitees: { type: [String], required: true},
     skills: { type: [String], required: true },

@@ -38,6 +38,7 @@ export const addProject = async (req: Request, res: Response): Promise<void> => 
 
     const newProject: IProject = new Project({
       name: data.name,
+      creator: data.creator,
       users: [data.creator],
       invitees: [],
       skills: initializeAttributes(data.skills, Object.values(Skill)),
