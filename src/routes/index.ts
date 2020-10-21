@@ -1,5 +1,5 @@
 import { Router } from "express";;
-import { addUser, getUser, getUsers } from "../controllers/usersController"
+import { addUser, getUser, getUsers, getUsersByUsernames } from "../controllers/usersController"
 import { getProjects, addProject, registerInProject, inviteToProject, getProject } from "../controllers/projectsController";
 import { isLoggedIn, login, logout } from "../controllers/authenticationController";
 import { getFrameworks, getProgrammingLanguages, getSkills } from "../controllers/attributeController";
@@ -11,6 +11,7 @@ router.post("/logout", logout);
 router.get("/isLoggedIn", isLoggedIn);
 router.get("/user/:username", getUser);
 router.get("/users", getUsers);
+router.post("/getUsersByUsernames", getUsersByUsernames);
 router.post("/addUser", addUser);
 router.get("/project/:name", getProject);
 router.get("/projects", getProjects);

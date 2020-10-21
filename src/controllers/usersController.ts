@@ -25,6 +25,16 @@ export const getUsers = async (_req: Request, res: Response): Promise<void> => {
   }
 }
 
+export const getUsersByUsernames = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const usernames: string[] = req.body.usernames;
+    const users: IUser[] = await User.find({ username: { $in: usernames }}, { password: 0 });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(401).json(error);
+  }
+}
+
 export const addUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const data = req.body;
