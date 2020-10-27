@@ -9,10 +9,12 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "faker": "^5.1.0",
     "mongoose": "^5.10.5",
     "typescript": "^4.0.2"
   },
   "devDependencies": {
+    "@types/faker": "^5.1.3",
     "@types/connect-mongodb-session": "0.0.4",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.7",
@@ -26,6 +28,7 @@
   "scripts": {
     "build": "tsc",
     "dev-start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
-    "start": "node dist/js/app.js"
+    "start": "node dist/js/app.js",
+    "upload-data": "concurrently \"tsc -w\" \"nodemon dist/js/data-generation/uploadData.js\""
   }
 }

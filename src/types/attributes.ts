@@ -17,7 +17,19 @@ export enum Skill {
   Analytics = "Analytics",
   ArtificialIntelligence = "Artificial Intelligence",
   Management = "Management",
-  Agile = "Agile"
+  Agile = "Agile",
+  QualityAssurance = "Quality Assurance",
+  BigData = "Big Data",
+  MobileDevelopment = "Mobile Development",
+  VideoGameDevelopment = "Video Game Development",
+  Security = "Security",
+  Algorithms = "Algorithms",
+  Networking = "Networking",
+  Scripting = "Scripting",
+  FunctionalProgramming = "Functional Programming",
+  ProceduralProgramming = "Procedural Programming",
+  DeclarativeProgramming = "Declarative Programming",
+  ImperativeProgramming = "Imperative Programming"
 };
 
 export enum ProgrammingLanguage {
@@ -36,7 +48,10 @@ export enum ProgrammingLanguage {
   Perl = "Perl",
   Rust = "Rust",
   Scala = "Scala",
-  MATLAB = "MATLAB"
+  MATLAB = "MATLAB",
+  Haskell = "Haskell",
+  Prolog = "Prolog",
+  VisualBasic = "Visual Basic"
 }
 
 export enum Framework {
@@ -45,15 +60,13 @@ export enum Framework {
   Angular = "Angular",
   NodeJS = "Node.js",
   Bootstrap = "Bootstrap",
-  NativeScript = "NativeScript"
+  NativeScript = "NativeScript",
+  JQuery = "jQuery",
+  JavaFX = "JavaFX",
+  Swing = "Swing",
+  Firebase = "Firebase",
+  GoogleAnalytics = "Google Analytics",
+  MongoDB = "MongoDB",
+  Heroku = "Heroku",
+  PostgreSQL = "PostgreSQL"
 }
-
-// export enum DatabaseProgram {
-//   MongoDB = "MongoDB",
-//   PostgreSQL = "PostgreSQL"
-// }
-
-// export type DatabaseProgramAttribute = {
-//   name: DatabaseProgram;
-//   votes: number;
-// }
