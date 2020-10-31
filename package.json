@@ -29,6 +29,7 @@
     "build": "tsc",
     "dev-start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "start": "node dist/js/app.js",
-    "upload-data": "concurrently \"tsc -w\" \"nodemon dist/js/data-generation/uploadData.js\""
+    "upload-users": "nodemon dist/js/data-generation/uploadNewUsers.js",
+    "upload-projects": "nodemon dist/js/data-generation/uploadNewProjects.js"
   }
 }

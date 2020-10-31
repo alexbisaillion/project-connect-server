@@ -6,9 +6,8 @@ import schools from "./schools.json";
 import domains from "./domains.json";
 import positions from "./positions.json";
 import industries from "./industries.json";
-import { Attribute, Employment, Framework, ProgrammingLanguage, Skill } from "../types/attributes";
-
-const getRandomNum = (max: number, min: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+import { Employment, Framework, ProgrammingLanguage, Skill } from "../types/attributes";
+import { getRandomAttribute, getRandomAttributes, getRandomNum } from "./helpers";
 
 const getRandomCompanies = (): string[] => {
   const numCompanies = getRandomNum(1, 5); // Initialize each city with between 1 and 5 companies
@@ -26,7 +25,6 @@ for (let i = 0; i < cities.length; i++) {
 }
 const allCompanies = [...cityCompanies.values()].reduce((accumulator, value) => accumulator.concat(value), []);
 
-const getRandomAttribute = (attributes: any[]) => attributes[Math.floor(Math.random() * attributes.length)];
 const getRandomAge = () => getRandomNum(60, 16);
 
 const getRandomPosition = (regionCompany?: string): Employment => {
@@ -49,20 +47,6 @@ const getRandomPositions = (age: number): Employment[] => {
   }
   return positions;
 }
-
-const getRandomAttributes = (attributes: string[]): Attribute[] => {
-  const numAttributes = getRandomNum(1, 5);
-  const chosenAttributes: Attribute[] = [];
-  for (let i = 0; i < numAttributes; i++) {
-    const attribute = getRandomAttribute(attributes);
-    if (chosenAttributes.some(att => att.name === attribute)) {
-      i--;
-      continue;
-    }
-    chosenAttributes.push({ name: attribute, votes: 0});
-  }
-  return chosenAttributes;
-} 
 
 export const makeRandomUser = (): IUser => {
   const firstName = name.firstName();

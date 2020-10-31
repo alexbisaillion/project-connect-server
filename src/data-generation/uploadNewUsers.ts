@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
-import { UserSchema } from "../models/userModel";
 import { IUser } from "../types/user";
-import { makeRandomUser } from "./dataGeneration";
+import { makeRandomUser } from "./userGeneration";
 
 const uri: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.iwq4h.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 
