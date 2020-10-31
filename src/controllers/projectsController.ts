@@ -19,8 +19,8 @@ export const getProject = async (req: Request, res: Response): Promise<void> => 
 
 export const getProjects = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const users: IProject[] = await Project.find();
-    res.status(200).json(users);
+    const projects: IProject[] = await Project.find();
+    res.status(200).json(projects);
   } catch (error) {
     res.status(401).json(error);
   }

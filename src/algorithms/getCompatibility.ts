@@ -1,8 +1,7 @@
 import { Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 import { IProject } from "../types/project";
 import { IUser } from "../types/user";
-
-const matchStrings = (vector1: number[], vector2: number[], str1: string, str2: string) => str1.toLowerCase() === str2.toLowerCase() ? 1 : 0;
+import { getCosineSimilarity } from "./cosineSimilarity";
 
 const oneHotEncode = (attributes: string[], availableAttributes: string[]) => {
   const binaryRepresentation: number[] = []
@@ -12,38 +11,39 @@ const oneHotEncode = (attributes: string[], availableAttributes: string[]) => {
   return binaryRepresentation;
 }
 
-const processProjects = (users: IUser[], projects: IProject[]) => {
-  // This could be sped up if we assumed that all attributes were already defined in .json
-  const mostCommonEducation = new Map<string, string | undefined>();
-  const mostCommonRegion = new Map<string, string | undefined>();
-  const averageAge = new Map<string, number>();
-  for (const project of projects) {
-    const usersInProject = getFullUsers(project, users);
-    mostCommonEducation.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.education)));
-    mostCommonRegion.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.region)))
-    averageAge.set(project.name, getAverageAttribute(users.map(user => user.age)));
-  }
+// const processProjects = (users: IUser[], projects: IProject[]) => {
+//   // This could be sped up if we assumed that all attributes were already defined in .json
+//   const mostCommonEducation = new Map<string, string | undefined>();
+//   const mostCommonRegion = new Map<string, string | undefined>();
+//   const averageAge = new Map<string, number>();
+//   for (const project of projects) {
+//     const usersInProject = getFullUsers(project, users);
+//     mostCommonEducation.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.education)));
+//     mostCommonRegion.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.region)))
+//     averageAge.set(project.name, getAverageAttribute(users.map(user => user.age)));
+//   }
 
-  // Now that we have all of these fields, compute what is available
-  const availableEducations = [...mostCommonEducation.values()];
-  const availableRegions = [...mostCommonRegion.values()];
+//   // Now that we have all of these fields, compute what is available
+//   const availableEducations = [...mostCommonEducation.values()];
+//   const availableRegions = [...mostCommonRegion.values()];
 
-  for (const project of projects) {
-    const usersInProject = getFullUsers(project, users);
-    mostCommonEducation.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.education)));
-    mostCommonRegion.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.region)))
-    averageAge.set(project.name, getAverageAttribute(users.map(user => user.age)));
-  }
-}
+//   for (const project of projects) {
+//     const usersInProject = getFullUsers(project, users);
+//     mostCommonEducation.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.education)));
+//     mostCommonRegion.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.region)))
+//     averageAge.set(project.name, getAverageAttribute(users.map(user => user.age)));
+//   }
+// }
 
-const getUserToProjectScore = (project: IProject, user: IUser, allUsers: IUser[]) => {
+// Here we are comparing a user to a project, so we 
+export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: IUser[]) => {
   const usersInProject = getFullUsers(project, allUsers);
   const userVector: number[] = [];
   const projectVector: number[] = [];
 
   // Alma matter
-  const mostCommonEducation = getMostCommonAttribute(usersInProject.map(user => user.education));
-  if (user.education === mostCommonEducation) {
+  // const mostCommonEducation = getMostCommonAttribute(usersInProject.map(user => user.education));
+  if (usersInProject.map(user => user.education).includes(user.education)) {
     userVector.push(1);
     projectVector.push(1);
   } else {
@@ -52,8 +52,8 @@ const getUserToProjectScore = (project: IProject, user: IUser, allUsers: IUser[]
   }
 
   // Region
-  const mostCommonRegion = getMostCommonAttribute(usersInProject.map(user => user.region));
-  if (user.region === mostCommonRegion) {
+  // const mostCommonRegion = getMostCommonAttribute(usersInProject.map(user => user.region));
+  if (usersInProject.map(user => user.region).includes(user.region)) {
     userVector.push(1);
     projectVector.push(1);
   } else {
@@ -63,8 +63,8 @@ const getUserToProjectScore = (project: IProject, user: IUser, allUsers: IUser[]
 
   // Age
   const mostCommonAge = getAverageAttribute(usersInProject.map(user => user.age));
-  userVector.push(Math.min(mostCommonAge, user.age) / Math.max(mostCommonAge, user.age));
-  projectVector.push(mostCommonAge);
+  userVector.push(1);
+  projectVector.push(Math.min(mostCommonAge, user.age) / Math.max(mostCommonAge, user.age));
 
   // Skills - VERY important to use the same availableSkills list, since order needs to be maintained.
   const availableSkills = Object.values(Skill);
