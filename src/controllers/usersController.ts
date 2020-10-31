@@ -2,6 +2,10 @@ import { Response, Request } from "express"
 import User from "../models/userModel"
 import { IUser } from "../types/user"
 import { Attribute, Framework, ProgrammingLanguage, Skill } from "../types/attributes";
+import { getUserToProjectScore } from "../algorithms/getCompatibility";
+import Project from "../models/projectModel";
+import { IProject } from "../types/project";
+import { ProjectScore } from "../types/scores";
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -64,6 +68,29 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
+export const getProjectRecommendationsForUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user: IUser | null = await User.findOne({ username: req.params.username });
+    if (!user) {
+      res.status(401).json({ error: "Unable to find user" });
+      return;
+    }
+    const allUsers: IUser[] = await User.find();
+    const allProjects: IProject[] = await Project.find();
+
+    const scores: ProjectScore[] = [];
+    for (const project of allProjects) {
+      if (user.projects.includes(project.name) || !project.isInProgress) {
+        continue;
+      }
+      scores.push({ project: project.name, score: getUserToProjectScore(project, user, allUsers)});
+    }
+
+    res.status(200).json(scores.sort((a, b) => b.score - a.score));
+  } catch (error) {
+    res.status(401).json(error);
+  }
+}
 const initializeAttributes = (attributes: string[], validAttributes: string[]): Attribute[] => {
     // Reduce getting error here...
     const acceptedAttributes: Attribute[] = [];

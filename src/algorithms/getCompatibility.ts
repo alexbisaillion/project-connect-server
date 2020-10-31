@@ -36,7 +36,7 @@ const oneHotEncode = (attributes: string[], availableAttributes: string[]) => {
 // }
 
 // Here we are comparing a user to a project, so we 
-export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: IUser[]) => {
+export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: IUser[]): number => {
   const usersInProject = getFullUsers(project, allUsers);
   const userVector: number[] = [];
   const projectVector: number[] = [];
