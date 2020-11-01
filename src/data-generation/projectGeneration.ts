@@ -2,7 +2,9 @@ import { IProject } from "../types/project";
 import { IUser } from "../types/user";
 import Project from "../models/projectModel";
 import { convertToTitle, getRandomAttributes, getRandomNum, shuffle } from "./helpers";
-import { company, hacker, date } from "faker";
+import { company, date, lorem } from "faker";
+import { getUserToProjectScore } from "../algorithms/getCompatibility";
+import { UserScore } from "../types/scores";
 
 export const makeProject = (creator: IUser, allUsers: IUser[]) => {
   allUsers = shuffle(allUsers);
@@ -15,52 +17,11 @@ export const makeProject = (creator: IUser, allUsers: IUser[]) => {
   const startDate: Date = isInProgress ? date.recent() : date.past();
   const completionDate: Date | undefined = isInProgress ? undefined : date.recent();
 
-  // Pick some users that make sense
-  const users: string[] = [creator.username];
-
-  // Pick between 1 and 3 users that have a matching skill
-  let numUsers = getRandomNum(1, 3);
-  for (let i = 0; i< numUsers; i++) {
-    const user = allUsers.find(randomUser => chosenSkills.filter(
-      chosenSkill => randomUser.skills.map(
-        userSkill => userSkill.name
-      ).includes(chosenSkill)
-    ).length > 0 && !users.includes(randomUser.username));
-    if (user) {
-      users.push(user.username);
-    }
-  }
-
-  // Pick between 1 and 3 users that have a matching programming language
-  numUsers = getRandomNum(1, 3);
-  for (let i = 0; i < numUsers; i++) {
-    const user = allUsers.find(randomUser => chosenProgrammingLanguages.filter(
-      chosenProgrammingLanguage => randomUser.programmingLanguages.map(
-        pl => pl.name
-      ).includes(chosenProgrammingLanguage)
-    ).length > 0 && !users.includes(randomUser.username));
-    if (user) {
-      users.push(user.username);
-    }
-  }
-
-  // Pick between 1 and 3 users that have a matching framework
-  numUsers = getRandomNum(1, 3);
-  for (let i = 0; i < numUsers; i++) {
-    const user = allUsers.find(randomUser => chosenFrameworks.filter(
-      chosenFramework => randomUser.frameworks.map(
-        framework => framework.name
-      ).includes(chosenFramework)
-    ).length > 0 && !users.includes(randomUser.username));
-    if (user) {
-      users.push(user.username);
-    }
-  }
-
+  // Initial project object
   const testProject: IProject = new Project({
-    name: convertToTitle(company.catchPhraseNoun() + " " + hacker.noun() + " " + hacker.ingverb()),
+    name: convertToTitle(company.catchPhrase()),
     creator: creator.username,
-    users: users,
+    users: [creator.username],
     invitees: [],
     skills: chosenSkills,
     programmingLanguages: chosenProgrammingLanguages,
@@ -68,8 +29,27 @@ export const makeProject = (creator: IUser, allUsers: IUser[]) => {
     startDate: startDate,
     isInProgress: isInProgress,
     completionDate: completionDate,
-    description: company.catchPhrase()
+    description: lorem.paragraph()
   });
+
+  // Pick some users that have high compatibility
+  const users: string[] = [creator.username];
+  let scores: UserScore[] = [];
+  for (const otherUser of allUsers) {
+    if (otherUser.username !== creator.username) {
+      scores.push({ user: otherUser.username, score: getUserToProjectScore(testProject, otherUser, allUsers)});
+    }
+  }
+
+  scores = scores.sort((a, b) => b.score - a.score);
+
+  // Pick between 1 and 3 users that have a matching skill
+  let numUsers = getRandomNum(1, 3);
+  for (let i = 0; i < numUsers; i++) {
+    users.push(scores[i].user);
+  }
+
+  testProject.users = users;
 
   return testProject;
 }

@@ -25,7 +25,7 @@ for (let i = 0; i < cities.length; i++) {
 }
 const allCompanies = [...cityCompanies.values()].reduce((accumulator, value) => accumulator.concat(value), []);
 
-const getRandomAge = () => getRandomNum(60, 16);
+const getRandomAge = () => getRandomNum(55, 16);
 
 const getRandomPosition = (regionCompany?: string): Employment => {
   const position: string = getRandomAttribute(positions);

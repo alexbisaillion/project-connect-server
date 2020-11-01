@@ -12,6 +12,7 @@ mongoose.set("useFindAndModify", false);
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }).then(async () => {
     const users: IUser[] = await User.find({});
     const createdProjects: IProject[] = [];
+
     for (const user of users) {
       const numProjects = getRandomNum(0, 2); // Each user will have created between 0 and 2 projects
       for (let i = 0; i < numProjects; i++) {

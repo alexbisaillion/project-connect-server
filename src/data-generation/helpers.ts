@@ -4,7 +4,7 @@ export const getRandomNum = (min: number, max: number) => Math.floor(Math.random
 export const getRandomAttribute = (attributes: any[]) => attributes[Math.floor(Math.random() * attributes.length)];
 
 export const getRandomAttributes = (attributes: string[]): Attribute[] => {
-  const numAttributes = getRandomNum(1, Math.min(attributes.length, 5));
+  const numAttributes = getRandomNum(Math.min(attributes.length, 3), Math.min(attributes.length, 8));
   const chosenAttributes: Attribute[] = [];
   for (let i = 0; i < numAttributes; i++) {
     const attribute = getRandomAttribute(attributes);
