@@ -42,8 +42,10 @@ export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: 
   const projectVector: number[] = [];
 
   // Alma matter
-  // const mostCommonEducation = getMostCommonAttribute(usersInProject.map(user => user.education));
-  if (usersInProject.map(user => user.education).includes(user.education)) {
+  // Alternatively, just check if at least one user in the project has a matching alma matter:
+  // usersInProject.map(user => user.education).includes(user.education)
+  const mostCommonEducation = getMostCommonAttribute(usersInProject.map(user => user.education));
+  if (mostCommonEducation === user.education) {
     userVector.push(1);
     projectVector.push(1);
   } else {
@@ -52,8 +54,10 @@ export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: 
   }
 
   // Region
-  // const mostCommonRegion = getMostCommonAttribute(usersInProject.map(user => user.region));
-  if (usersInProject.map(user => user.region).includes(user.region)) {
+  const mostCommonRegion = getMostCommonAttribute(usersInProject.map(user => user.region));
+  // Alternatively, just check if at least one user in the project has a matching region:
+  // usersInProject.map(user => user.region).includes(user.region)
+  if (mostCommonRegion === user.region) {
     userVector.push(1);
     projectVector.push(1);
   } else {
