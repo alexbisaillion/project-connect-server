@@ -1,6 +1,6 @@
 import { Router } from "express";;
 import { addUser, getProjectRecommendationsForUser, getUser, getUsers, getUsersByUsernames } from "../controllers/usersController"
-import { getProjects, addProject, registerInProject, inviteToProject, getProject } from "../controllers/projectsController";
+import { getProjects, addProject, registerInProject, inviteToProject, getProject, getUserRecommendationsForProject } from "../controllers/projectsController";
 import { isLoggedIn, login, logout } from "../controllers/authenticationController";
 import { getFrameworks, getProgrammingLanguages, getSkills } from "../controllers/attributeController";
 
@@ -22,5 +22,6 @@ router.get("/skills", getSkills);
 router.get("/programmingLanguages", getProgrammingLanguages);
 router.get("/frameworks", getFrameworks);
 router.get("/getProjectRecommendationsForUser/:username", getProjectRecommendationsForUser);
+router.get("/getUserRecommendationsForProject/:name", getUserRecommendationsForProject);
 
 export default router;

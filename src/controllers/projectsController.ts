@@ -1,8 +1,11 @@
 import { Response, Request } from "express"
+import { getUserToProjectScore } from "../algorithms/getCompatibility";
 import Project from "../models/projectModel"
 import User from "../models/userModel"
 import { Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 import { IProject } from "../types/project"
+import { UserScore } from "../types/scores";
+import { IUser } from "../types/user";
 
 export const getProject = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -117,6 +120,34 @@ export const registerInProject = async (req: Request, res: Response): Promise<vo
   } catch (error) {
     res.status(401).json(error);
   } 
+}
+
+export const getUserRecommendationsForProject = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const project: IProject | null = await Project.findOne({ name: req.params.name });
+    if (!project) {
+      res.status(401).json({ error: "Unable to find project" });
+      return;
+    }
+    if (!project.isInProgress) {
+      res.status(401).json({ error: "Cannot recommend users for a completed project" });
+      return;
+    }
+
+    const allUsers: IUser[] = await User.find();
+    const scores: UserScore[] = [];
+
+    for (const user of allUsers) {
+      if (user.projects.includes(project.name)) {
+        continue;
+      }
+      scores.push({ user: user.name, score: getUserToProjectScore(project, user, allUsers)});
+    }
+
+    res.status(200).json(scores.sort((a, b) => b.score - a.score));
+  } catch (error) {
+    res.status(401).json(error);
+  }
 }
 
 const initializeAttributes = (attributes: string[], validAttributes: string[]): string[] => {

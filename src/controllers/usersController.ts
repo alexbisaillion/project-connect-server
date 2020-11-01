@@ -91,6 +91,7 @@ export const getProjectRecommendationsForUser = async (req: Request, res: Respon
     res.status(401).json(error);
   }
 }
+
 const initializeAttributes = (attributes: string[], validAttributes: string[]): Attribute[] => {
     // Reduce getting error here...
     const acceptedAttributes: Attribute[] = [];
