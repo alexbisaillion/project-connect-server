@@ -1,5 +1,5 @@
 import { Response, Request } from "express"
-import { getUserToProjectScore } from "../algorithms/getCompatibility";
+import { getCompatibility } from "../algorithms/getCompatibility";
 import Project from "../models/projectModel"
 import User from "../models/userModel"
 import { Framework, ProgrammingLanguage, Skill } from "../types/attributes";
@@ -141,7 +141,7 @@ export const getUserRecommendationsForProject = async (req: Request, res: Respon
       if (user.projects.includes(project.name)) {
         continue;
       }
-      scores.push({ user: user.name, score: getUserToProjectScore(project, user, allUsers)});
+      scores.push({ user: user.name, score: getCompatibility(project, user, allUsers)});
     }
 
     res.status(200).json(scores.sort((a, b) => b.score - a.score));

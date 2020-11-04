@@ -1,47 +1,14 @@
 import { Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 import { IProject } from "../types/project";
 import { IUser } from "../types/user";
-import { getCosineSimilarity } from "./cosineSimilarity";
+import { getCosineSimilarity } from "./getCosineSimilarity";
 
-const oneHotEncode = (attributes: string[], availableAttributes: string[]) => {
-  const binaryRepresentation: number[] = []
-  for (const availableAttribute of availableAttributes) {
-    binaryRepresentation.push(attributes.includes(availableAttribute) ? 1 : 0);
-  }
-  return binaryRepresentation;
-}
-
-// const processProjects = (users: IUser[], projects: IProject[]) => {
-//   // This could be sped up if we assumed that all attributes were already defined in .json
-//   const mostCommonEducation = new Map<string, string | undefined>();
-//   const mostCommonRegion = new Map<string, string | undefined>();
-//   const averageAge = new Map<string, number>();
-//   for (const project of projects) {
-//     const usersInProject = getFullUsers(project, users);
-//     mostCommonEducation.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.education)));
-//     mostCommonRegion.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.region)))
-//     averageAge.set(project.name, getAverageAttribute(users.map(user => user.age)));
-//   }
-
-//   // Now that we have all of these fields, compute what is available
-//   const availableEducations = [...mostCommonEducation.values()];
-//   const availableRegions = [...mostCommonRegion.values()];
-
-//   for (const project of projects) {
-//     const usersInProject = getFullUsers(project, users);
-//     mostCommonEducation.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.education)));
-//     mostCommonRegion.set(project.name, getMostCommonAttribute(usersInProject.map(user => user.region)))
-//     averageAge.set(project.name, getAverageAttribute(users.map(user => user.age)));
-//   }
-// }
-
-// Here we are comparing a user to a project, so we 
-export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: IUser[]): number => {
+export const getCompatibility = (project: IProject, user: IUser, allUsers: IUser[]): number => {
   const usersInProject = getFullUsers(project, allUsers);
   const userVector: number[] = [];
   const projectVector: number[] = [];
 
-  // Alma matter
+  // Education
   // Alternatively, just check if at least one user in the project has a matching alma matter:
   // usersInProject.map(user => user.education).includes(user.education)
   const mostCommonEducation = getMostCommonAttribute(usersInProject.map(user => user.education));
@@ -70,7 +37,40 @@ export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: 
   userVector.push(1);
   projectVector.push(Math.min(mostCommonAge, user.age) / Math.max(mostCommonAge, user.age));
 
-  // Skills - VERY important to use the same availableSkills list, since order needs to be maintained.
+  // Industry
+  const mostCommonIndustry = getMostCommonAttribute(usersInProject.map(user => user.industry));
+  if (mostCommonIndustry === user.industry) {
+    userVector.push(1);
+    projectVector.push(1);
+  } else {
+    userVector.push(1);
+    projectVector.push(0);
+  }
+
+  // Current/past employment
+
+  // User companies
+  const userRepresentedCompanies: string[] = [];
+  userRepresentedCompanies.push(user.currentEmployment.company);
+  userRepresentedCompanies.push(...user.pastEmployment.map(employment => employment.company));
+
+  // Project companies
+  const allRepresentedCompanies: string[] = [];
+  allRepresentedCompanies.push(...usersInProject.map(user => user.currentEmployment.company));
+  allRepresentedCompanies.push(...flattenList<string>(usersInProject.map(user => user.pastEmployment.map(employment => employment.company))));
+
+  // If the user and project users share at least 1 company, indicate a match
+  if (userRepresentedCompanies.filter(company => allRepresentedCompanies.includes(company))) {
+    userVector.push(1);
+    projectVector.push(1);
+  } else {
+    userVector.push(1);
+    projectVector.push(0);
+  }
+
+  // For skills, programming languages, and frameworks, it is very important to list the attributes in the same order.
+
+  // Skills
   const availableSkills = Object.values(Skill);
   userVector.push(...oneHotEncode(user.skills.map(skill => skill.name), availableSkills));
   projectVector.push(...oneHotEncode(project.skills, availableSkills));
@@ -87,6 +87,16 @@ export const getUserToProjectScore = (project: IProject, user: IUser, allUsers: 
 
   return getCosineSimilarity(userVector, projectVector);
 }
+
+const oneHotEncode = (attributes: string[], availableAttributes: string[]) => {
+  const binaryRepresentation: number[] = []
+  for (const availableAttribute of availableAttributes) {
+    binaryRepresentation.push(attributes.includes(availableAttribute) ? 1 : 0);
+  }
+  return binaryRepresentation;
+}
+
+const flattenList = <T>(list: any[]): T[] => list.reduce((accumulator, value) => accumulator.concat(value), []);
 
 const getFullUsers = (project: IProject, allUsers: IUser[]): IUser[] => allUsers.filter(user => project.users.includes(user.username));
 

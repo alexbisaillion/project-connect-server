@@ -2,7 +2,7 @@ import { Response, Request } from "express"
 import User from "../models/userModel"
 import { IUser } from "../types/user"
 import { Attribute, Framework, ProgrammingLanguage, Skill } from "../types/attributes";
-import { getUserToProjectScore } from "../algorithms/getCompatibility";
+import { getCompatibility } from "../algorithms/getCompatibility";
 import Project from "../models/projectModel";
 import { IProject } from "../types/project";
 import { ProjectScore } from "../types/scores";
@@ -83,7 +83,7 @@ export const getProjectRecommendationsForUser = async (req: Request, res: Respon
       if (user.projects.includes(project.name) || !project.isInProgress) {
         continue;
       }
-      scores.push({ project: project.name, score: getUserToProjectScore(project, user, allUsers)});
+      scores.push({ project: project.name, score: getCompatibility(project, user, allUsers)});
     }
 
     res.status(200).json(scores.sort((a, b) => b.score - a.score));
