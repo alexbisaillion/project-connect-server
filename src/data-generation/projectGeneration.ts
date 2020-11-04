@@ -3,7 +3,7 @@ import { IUser } from "../types/user";
 import Project from "../models/projectModel";
 import { convertToTitle, getRandomAttributes, getRandomNum, shuffle } from "./helpers";
 import { company, date, lorem } from "faker";
-import { getUserToProjectScore } from "../algorithms/getCompatibility";
+import { getCompatibility } from "../algorithms/getCompatibility";
 import { UserScore } from "../types/scores";
 
 export const makeProject = (creator: IUser, allUsers: IUser[]) => {
@@ -37,13 +37,12 @@ export const makeProject = (creator: IUser, allUsers: IUser[]) => {
   let scores: UserScore[] = [];
   for (const otherUser of allUsers) {
     if (otherUser.username !== creator.username) {
-      scores.push({ user: otherUser.username, score: getUserToProjectScore(testProject, otherUser, allUsers)});
+      scores.push({ user: otherUser.username, score: getCompatibility(testProject, otherUser, allUsers)});
     }
   }
 
   scores = scores.sort((a, b) => b.score - a.score);
 
-  // Pick between 1 and 3 users that have a matching skill
   let numUsers = getRandomNum(1, 3);
   for (let i = 0; i < numUsers; i++) {
     users.push(scores[i].user);
