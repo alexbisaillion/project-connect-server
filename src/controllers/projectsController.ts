@@ -96,8 +96,13 @@ export const inviteToProject = async (req: Request, res: Response): Promise<void
 
     await project.update({ $push: { invitees: data.username }});
     await user.update({ $push: { invitations: data.name } });
+
+    const updatedUser = await User.findOne({ username: data.username });
+    if (!updatedUser) {
+      res.status(401).json({ error: "Unable to find updated user"});
+    }
   
-    res.status(201).json({ success: true });  
+    res.status(201).json(updatedUser);  
   } catch (error) {
     res.status(401).json(error);
   } 
@@ -140,7 +145,7 @@ export const requestToJoinProject = async (req: Request, res: Response): Promise
   
     const updatedProject = await Project.findOne({ name: data.name });
     if (!updatedProject) {
-      res.status(401).json({ error: "Unable to find updated project "});
+      res.status(401).json({ error: "Unable to find updated project"});
     }
 
     res.status(201).json(updatedProject);
