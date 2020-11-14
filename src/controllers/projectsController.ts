@@ -163,6 +163,7 @@ export const requestToJoinProject = async (req: Request, res: Response): Promise
     res.status(401).json(error);
   } 
 }
+
 export const registerInProject = async (req: Request, res: Response): Promise<void> => {
   try {
     const data = req.body;
@@ -180,7 +181,7 @@ export const registerInProject = async (req: Request, res: Response): Promise<vo
       return;
     }
 
-    if (!project.invitees.includes(data.username) || !user?.invitations.includes(data.name)) {
+    if (!project.invitees.includes(data.username) || !user.invitations.includes(data.name)) {
       res.status(401).json({ error: "Not invited to project" });
     }
 
@@ -229,6 +230,46 @@ export const getUserRecommendationsForProject = async (req: Request, res: Respon
   } catch (error) {
     res.status(401).json(error);
   }
+}
+
+export const acceptRequest = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const data = req.body;
+
+    const project = await Project.findOne({ name: data.name });
+    const user = await User.findOne({ username: data.username });
+
+    if (project === null) {
+      res.status(401).json({ error: "Invalid project" });
+      return;
+    }
+
+    if (user === null) {
+      res.status(401).json({ error: "Invalid user" });
+      return;
+    }
+
+    if (!project.requests.includes(data.username) || !user.requests.includes(data.name)) {
+      res.status(401).json({ error: "User has not requested to join project" });
+    }
+
+    // Add the user to the project users and remove the user from the invitees 
+    await project.update({ $push: { users: data.username }});
+    await project.update({ $pull: { requests: data.username }});
+
+    // Add to the user's list of projects and remove from invitations
+    await user.update({ $push: { projects: data.name }});
+    await user.update({ $pull: { requests: data.name }});
+
+    const updatedProject = await Project.findOne({ name: data.name });
+    if (!updatedProject) {
+      res.status(401).json({ error: "Unable to find updated project"});
+    }
+  
+    res.status(201).json(updatedProject);  
+  } catch (error) {
+    res.status(401).json(error);
+  } 
 }
 
 const initializeAttributes = (attributes: string[], validAttributes: string[]): string[] => {
