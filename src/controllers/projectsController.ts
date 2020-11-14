@@ -29,6 +29,16 @@ export const getProjects = async (_req: Request, res: Response): Promise<void> =
   }
 }
 
+export const getProjectsByNames = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const names: string[] = req.body.names;
+    const projects: IProject[] = await Project.find({ name: { $in: names }});
+    res.status(200).json(projects);
+  } catch (error) {
+    res.status(401).json(error);
+  }
+}
+
 export const addProject = async (req: Request, res: Response): Promise<void> => {
   try {
     const data = req.body;
@@ -181,8 +191,13 @@ export const registerInProject = async (req: Request, res: Response): Promise<vo
     // Add to the user's list of projects and remove from invitations
     await user.update({ $push: { projects: data.name }});
     await user.update({ $pull: { invitations: data.name }});
+
+    const updatedUser = await User.findOne({ username: data.username });
+    if (!updatedUser) {
+      res.status(401).json({ error: "Unable to find updated user"});
+    }
   
-    res.status(201).json({ success: true });  
+    res.status(201).json(updatedUser);  
   } catch (error) {
     res.status(401).json(error);
   } 
