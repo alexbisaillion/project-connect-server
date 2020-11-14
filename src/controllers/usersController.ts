@@ -58,6 +58,7 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
       frameworks: initializeAttributes(data.frameworks, Object.values(Framework)),
       projects: [],
       invitations: [],
+      requests: [],
       bio: data.bio
     });
     const savedUser = await newUser.save();
@@ -83,7 +84,7 @@ export const getProjectRecommendationsForUser = async (req: Request, res: Respon
       if (user.projects.includes(project.name) || !project.isInProgress) {
         continue;
       }
-      scores.push({ project: project.name, score: getCompatibility(project, user, allUsers)});
+      scores.push({ project: project, score: getCompatibility(project, user, allUsers)});
     }
 
     res.status(200).json(scores.sort((a, b) => b.score - a.score));

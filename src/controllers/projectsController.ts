@@ -44,6 +44,7 @@ export const addProject = async (req: Request, res: Response): Promise<void> => 
       creator: data.creator,
       users: [data.creator],
       invitees: [],
+      requests: [],
       skills: initializeAttributes(data.skills, Object.values(Skill)),
       programmingLanguages: initializeAttributes(data.programmingLanguages, Object.values(ProgrammingLanguage)),
       frameworks: initializeAttributes(data.frameworks, Object.values(Framework)),
@@ -78,6 +79,21 @@ export const inviteToProject = async (req: Request, res: Response): Promise<void
       return;
     }
 
+    if (project.invitees.includes(user.username) || user.invitations.includes(project.name)) {
+      res.status(401).json({ error: "User has already been invited" });
+      return;
+    }
+
+    if (project.users.includes(user.username) || user.projects.includes(project.name)) {
+      res.status(401).json({ error: "User has already joined" });
+      return;
+    }
+
+    if (project.requests.includes(user.username) || user.requests.includes(project.name)) {
+      res.status(401).json({ error: "User has already requested to join" });
+      return;
+    }
+
     await project.update({ $push: { invitees: data.username }});
     await user.update({ $push: { invitations: data.name } });
   
@@ -87,6 +103,51 @@ export const inviteToProject = async (req: Request, res: Response): Promise<void
   } 
 }
 
+export const requestToJoinProject = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const data = req.body;
+
+    const project = await Project.findOne({ name: data.name });
+    const user = await User.findOne({ username: data.username });
+
+    if (project === null) {
+      res.status(401).json({ error: "Invalid project" });
+      return;
+    }
+
+    if (user === null) {
+      res.status(401).json({ error: "Invalid user" });
+      return;
+    }
+
+    if (project.invitees.includes(user.username) || user.invitations.includes(project.name)) {
+      res.status(401).json({ error: "User has already been invited" });
+      return;
+    }
+
+    if (project.users.includes(user.username) || user.projects.includes(project.name)) {
+      res.status(401).json({ error: "User has already joined" });
+      return;
+    }
+
+    if (project.requests.includes(user.username) || user.requests.includes(project.name)) {
+      res.status(401).json({ error: "User has already requested to join" });
+      return;
+    }
+
+    await project.update({ $push: { requests: data.username }});
+    await user.update({ $push: { requests: data.name } });
+  
+    const updatedProject = await Project.findOne({ name: data.name });
+    if (!updatedProject) {
+      res.status(401).json({ error: "Unable to find updated project "});
+    }
+
+    res.status(201).json(updatedProject);
+  } catch (error) {
+    res.status(401).json(error);
+  } 
+}
 export const registerInProject = async (req: Request, res: Response): Promise<void> => {
   try {
     const data = req.body;
@@ -141,7 +202,7 @@ export const getUserRecommendationsForProject = async (req: Request, res: Respon
       if (user.projects.includes(project.name)) {
         continue;
       }
-      scores.push({ user: user.name, score: getCompatibility(project, user, allUsers)});
+      scores.push({ user, score: getCompatibility(project, user, allUsers)});
     }
 
     res.status(200).json(scores.sort((a, b) => b.score - a.score));

@@ -5,6 +5,7 @@ export interface IProject extends Document {
   creator: string;
   users: string[];
   invitees: string[];
+  requests: string[];
   skills: string[];
   programmingLanguages: string[];
   frameworks: string[];

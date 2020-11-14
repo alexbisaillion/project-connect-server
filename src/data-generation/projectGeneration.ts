@@ -23,6 +23,7 @@ export const makeProject = (creator: IUser, allUsers: IUser[]) => {
     creator: creator.username,
     users: [creator.username],
     invitees: [],
+    requests: [],
     skills: chosenSkills,
     programmingLanguages: chosenProgrammingLanguages,
     frameworks: chosenFrameworks,
@@ -33,11 +34,11 @@ export const makeProject = (creator: IUser, allUsers: IUser[]) => {
   });
 
   // Pick some users that have high compatibility
-  const users: string[] = [creator.username];
+  const users: IUser[] = [creator];
   let scores: UserScore[] = [];
   for (const otherUser of allUsers) {
     if (otherUser.username !== creator.username) {
-      scores.push({ user: otherUser.username, score: getCompatibility(testProject, otherUser, allUsers)});
+      scores.push({ user: otherUser, score: getCompatibility(testProject, otherUser, allUsers)});
     }
   }
 
@@ -48,7 +49,7 @@ export const makeProject = (creator: IUser, allUsers: IUser[]) => {
     users.push(scores[i].user);
   }
 
-  testProject.users = users;
+  testProject.users = users.map(user => user.username);
 
   return testProject;
 }

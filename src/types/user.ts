@@ -16,5 +16,6 @@ export interface IUser extends Document {
   frameworks: Attribute[];
   projects: string[];
   invitations: string[];
+  requests: string[];
   bio: string;
 }

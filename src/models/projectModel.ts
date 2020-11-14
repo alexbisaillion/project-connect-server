@@ -7,6 +7,7 @@ export const ProjectSchema = new Schema(
     creator: { type: String, required: true },
     users: { type: [String], required: true },
     invitees: { type: [String], required: true},
+    requests: { type: [String], required: true },
     skills: { type: [String], required: true },
     programmingLanguages: { type: [String], required: true },
     frameworks: { type: [String], required: true },

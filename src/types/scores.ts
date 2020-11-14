@@ -1,9 +1,12 @@
+import { IProject } from "./project"
+import { IUser } from "./user"
+
 export type ProjectScore = {
-  project: string;
+  project: IProject;
   score: number;
 }
 
 export type UserScore = {
-  user: string;
+  user: IUser;
   score: number;
 }

@@ -56,7 +56,7 @@ export const makeRandomUser = (): IUser => {
 
   const newUser: IUser = new User({
     username: (firstName + lastName).toLowerCase(),
-    password: internet.password(),
+    password: (firstName + lastName).toLowerCase(),
     name: firstName + " " + lastName,
     age: age,
     region: city,
@@ -69,6 +69,7 @@ export const makeRandomUser = (): IUser => {
     frameworks: getRandomAttributes(Object.values(Framework)),
     projects: [],
     invitations: [],
+    requests: [],
     bio: lorem.sentence(),
   });
 
