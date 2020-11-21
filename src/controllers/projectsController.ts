@@ -4,7 +4,7 @@ import Project from "../models/projectModel"
 import User from "../models/userModel"
 import { Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 import { IProject } from "../types/project"
-import { UserScore } from "../types/scores";
+import { ProjectScore, UserScore } from "../types/scores";
 import { IUser } from "../types/user";
 
 export const getProject = async (req: Request, res: Response): Promise<void> => {
@@ -270,6 +270,28 @@ export const acceptRequest = async (req: Request, res: Response): Promise<void> 
   } catch (error) {
     res.status(401).json(error);
   } 
+}
+
+export const getMostRecentProjects = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      res.status(401).json({ error: "Invalid user to match against" });
+      return;
+    }
+
+    const allUsers: IUser[] = await User.find();
+    const projects: IProject[] = await Project.find();
+    const mostRecentProjects = projects.sort((a, b) => a.startDate < b.startDate ? 1 : -1).slice(0, Math.min(10, projects.length));
+    const recentProjectsWithScores = mostRecentProjects.reduce((projects, project) => {
+      const score = getCompatibility(project, user, allUsers);
+      projects.push({ project, score });
+      return projects;
+    }, [] as ProjectScore[]);
+    res.status(200).json(recentProjectsWithScores);
+  } catch (error) {
+    res.status(401).json(error);
+  }
 }
 
 const initializeAttributes = (attributes: string[], validAttributes: string[]): string[] => {
