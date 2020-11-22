@@ -6,6 +6,7 @@ import { Framework, ProgrammingLanguage, Skill } from "../types/attributes";
 import { IProject } from "../types/project"
 import { ProjectScore, UserScore } from "../types/scores";
 import { IUser } from "../types/user";
+import { Operation } from "../types/notification";
 
 export const getProject = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -106,6 +107,7 @@ export const inviteToProject = async (req: Request, res: Response): Promise<void
 
     await project.update({ $push: { invitees: data.username }});
     await user.update({ $push: { invitations: data.name } });
+    await user.update({ $push: { notifications: { sender: project.creator, operation: Operation.NewInvite, timestamp: new Date(), project: project.name } } });
 
     const updatedUser = await User.findOne({ username: data.username });
     if (!updatedUser) {
@@ -152,6 +154,14 @@ export const requestToJoinProject = async (req: Request, res: Response): Promise
 
     await project.update({ $push: { requests: data.username }});
     await user.update({ $push: { requests: data.name } });
+
+    const creator = await User.findOne({ username: project.creator });
+    if (!creator) {
+      res.status(401).json({ error: "Could not notify creator" });
+      return;
+    }
+    console.log(project.name);
+    await creator.update({ $push: { notifications: { sender: user.username, operation: Operation.NewRequest, timestamp: new Date(), project: project.name } } });
   
     const updatedProject = await Project.findOne({ name: data.name });
     if (!updatedProject) {
@@ -192,6 +202,13 @@ export const registerInProject = async (req: Request, res: Response): Promise<vo
     // Add to the user's list of projects and remove from invitations
     await user.update({ $push: { projects: data.name }});
     await user.update({ $pull: { invitations: data.name }});
+
+    const creator = await User.findOne({ username: project.creator });
+    if (!creator) {
+      res.status(401).json({ error: "Could not notify creator" });
+      return;
+    }
+    await creator.update({ $push: { notifications: { sender: user.username, operation: Operation.AcceptedInvite, timestamp: new Date(), project: project.name } } });
 
     const updatedUser = await User.findOne({ username: data.username });
     if (!updatedUser) {
@@ -260,6 +277,7 @@ export const acceptRequest = async (req: Request, res: Response): Promise<void> 
     // Add to the user's list of projects and remove from invitations
     await user.update({ $push: { projects: data.name }});
     await user.update({ $pull: { requests: data.name }});
+    await user.update({ $push: { notifications: { sender: project.creator, operation: Operation.AcceptedRequest, timestamp: new Date(), project: project.name } } });
 
     const updatedProject = await Project.findOne({ name: data.name });
     if (!updatedProject) {

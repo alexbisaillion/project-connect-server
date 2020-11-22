@@ -59,7 +59,8 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
       projects: [],
       invitations: [],
       requests: [],
-      bio: data.bio
+      bio: data.bio,
+      notifications: []
     });
     const savedUser = await newUser.save();
 
