@@ -62,7 +62,7 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
       bio: data.bio,
       notifications: []
     });
-    const savedUser = await newUser.save();
+    await newUser.save();
 
     res.status(201).json({ success: true });
   } catch (error) {
@@ -93,6 +93,29 @@ export const getProjectRecommendationsForUser = async (req: Request, res: Respon
     res.status(401).json(error);
   }
 }
+
+export const dismissNotification = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const data = req.body;
+
+    const user: IUser | null = await User.findOne({ username: data.username });
+    if (!user) {
+      res.status(401).json({ error: "Unable to find user" });
+      return;
+    }
+
+    await user.update({ $pull: { notifications: { "_id": data.notificationId } }});
+
+    const updatedUser = await User.findOne({ username: data.username });
+    if (!updatedUser) {
+      res.status(401).json({ error: "Unable to find updated user"});
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(401).json(error);
+  }
+} 
 
 const initializeAttributes = (attributes: string[], validAttributes: string[]): Attribute[] => {
     // Reduce getting error here...
