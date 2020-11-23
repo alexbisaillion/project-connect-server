@@ -12,7 +12,7 @@ export const getRandomAttributes = (attributes: string[]): Attribute[] => {
       i--;
       continue;
     }
-    chosenAttributes.push({ name: attribute, votes: 0});
+    chosenAttributes.push({ name: attribute, votes: []});
   }
   return chosenAttributes;
 }

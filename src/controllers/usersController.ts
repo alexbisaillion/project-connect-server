@@ -104,7 +104,7 @@ export const dismissNotification = async (req: Request, res: Response): Promise<
       return;
     }
 
-    await user.update({ $pull: { notifications: { "_id": data.notificationId } }});
+    await user.update({ $set: { notifications: { "_id": data.notificationId } }});
 
     const updatedUser = await User.findOne({ username: data.username });
     if (!updatedUser) {
@@ -115,14 +115,110 @@ export const dismissNotification = async (req: Request, res: Response): Promise<
   } catch (error) {
     res.status(401).json(error);
   }
-} 
+}
+
+export const voteForSkill = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const data = req.body;
+    const targetUsername = data.targetUsername;
+    const votingUsername = data.votingUsername;
+
+    if (targetUsername === votingUsername) {
+      res.status(401).json({ error: "Cannot vote for your own skill" });
+    }
+
+    const skill = data.skill;
+    const targetUser: IUser | null = await User.findOne({ username: targetUsername });
+    if (!targetUser) {
+      res.status(401).json({ error: "Unable to find target user" });
+      return;
+    }
+    const votingUser: IUser | null = await User.findOne({ username: votingUsername });
+    if (!votingUser) {
+      res.status(401).json({ error: "Voting user does not exist" });
+      return;
+    }
+
+    let updatedSkillList: Attribute[] = [];
+    if (Object.values(Skill).includes(skill)) {
+      const existingSkill = targetUser.skills.find(listedSkill => listedSkill.name === skill);
+
+      if (!existingSkill) {
+        res.status(401).json({ error: "Specified user has not listed indicated interest" });
+        return;
+      }
+      if (existingSkill.votes.includes(votingUsername)) {
+        res.status(401).json({ error: "Vote has already been given" });
+        return;
+      }
+
+      existingSkill.votes.push(votingUsername);
+
+      updatedSkillList = [...targetUser.skills];
+      const skillIndex = updatedSkillList.indexOf(existingSkill);
+      updatedSkillList[skillIndex] = existingSkill;
+
+      await targetUser.update({ $set: { skills: updatedSkillList }});
+    } else if (Object.values(ProgrammingLanguage).includes(skill)) {
+      const existingSkill = targetUser.programmingLanguages.find(listedSkill => listedSkill.name === skill);
+
+      if (!existingSkill) {
+        res.status(401).json({ error: "Specified user has not listed indicated programming language" });
+        return;
+      }
+      if (existingSkill.votes.includes(votingUsername)) {
+        res.status(401).json({ error: "Vote has already been given" });
+        return;
+      }
+
+      existingSkill.votes.push(votingUsername);
+
+      updatedSkillList = [...targetUser.programmingLanguages];
+      const skillIndex = updatedSkillList.indexOf(existingSkill);
+      updatedSkillList[skillIndex] = existingSkill;
+
+      await targetUser.update({ $set: { programmingLanguages: updatedSkillList }});
+    } else if (Object.values(Framework).includes(skill)) {
+      const existingSkill = targetUser.frameworks.find(listedSkill => listedSkill.name === skill);
+
+      if (!existingSkill) {
+        res.status(401).json({ error: "Specified user has not listed indicated framework" });
+        return;
+      }
+      if (existingSkill.votes.includes(votingUsername)) {
+        res.status(401).json({ error: "Vote has already been given" });
+        return;
+      }
+
+      existingSkill.votes.push(votingUsername);
+
+      updatedSkillList = [...targetUser.frameworks];
+      const skillIndex = updatedSkillList.indexOf(existingSkill);
+      updatedSkillList[skillIndex] = existingSkill;
+
+      await targetUser.update({ $set: { frameworks: updatedSkillList }});
+    } else {
+      res.status(401).json({ error: "Invalid skill" });
+      return;
+    }
+
+    const updatedUser = await User.findOne({ username: targetUsername });
+    if (!updatedUser) {
+      res.status(401).json({ error: "Unable to find updated user"});
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(401).json(error);
+  }
+}
 
 const initializeAttributes = (attributes: string[], validAttributes: string[]): Attribute[] => {
     // Reduce getting error here...
     const acceptedAttributes: Attribute[] = [];
     attributes.forEach(skill => {
       if (validAttributes.includes(skill)) {
-        acceptedAttributes.push({ name: skill, votes: 0});
+        acceptedAttributes.push({ name: skill, votes: []});
       }
     });
   

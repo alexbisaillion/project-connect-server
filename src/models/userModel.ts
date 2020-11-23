@@ -1,7 +1,7 @@
 import { IUser } from "../types/user";
 import { model, Schema } from "mongoose";
 
-const AttributeSchema = new Schema({ name: String, votes: Number});
+const AttributeSchema = new Schema({ name: String, votes: [String]});
 const EmploymentSchema = new Schema({ company: String, position: String});
 const NotificationSchema = new Schema({
   sender: String,

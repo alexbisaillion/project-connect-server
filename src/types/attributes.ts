@@ -1,6 +1,6 @@
 export type Attribute = {
   name: string;
-  votes: number;
+  votes: string[];
 }
 
 export type Employment = {
