@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+  <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+  <script>
+    Highcharts.chart('container', {
+      chart: {
+        type: 'column'
+      },
+      title: {
+        text: 'Iteration 1 Results'
+      },
+      subtitle: {
+        text: ''
+      },
+      xAxis: {
+        categories: [
+          '0.0 - 0.1',
+          '0.1 - 0.2',
+          '0.2 - 0.3',
+          '0.3 - 0.4',
+          '0.4 - 0.5',
+          '0.5 - 0.6',
+          '0.6 - 0.7',
+          '0.7 - 0.8',
+          '0.8 - 0.9',
+          '0.9 - 1.0'
+        ],
+        title: { text: "Score Range" },
+        crosshair: true
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: 'Number of Matches'
+        }
+      },
+      tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+          '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0,
+          borderWidth: 0,
+          groupPadding: 0,
+          shadow: false
+        }
+      },
+      series: [{
+        name: 'Number of matches falling in indicated range',
+        data: [143690, 265167, 319093, 178790, 57512, 10653, 1072, 251, 422, 350]
+      }]
+    });
+  </script>
+</body>
+</html>
