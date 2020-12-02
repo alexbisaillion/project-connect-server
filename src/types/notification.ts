@@ -4,9 +4,10 @@
 // xxx has accepted your invitation to join project yyy
 
 export enum Operation {
-  NewInvite = "NewInvite",
-  AcceptedRequest = "AcceptedRequest",
   NewRequest = "NewRequest",
+  AcceptedRequest = "AcceptedRequest",
+  RejectedRequest = "RejectedRequest",
+  NewInvite = "NewInvite",
   AcceptedInvite = "AcceptedInvite"
 }
 
