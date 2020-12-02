@@ -104,7 +104,7 @@ export const dismissNotification = async (req: Request, res: Response): Promise<
       return;
     }
 
-    await user.update({ $set: { notifications: { "_id": data.notificationId } }});
+    await user.update({ $pull: { notifications: { "_id": data.notificationId } }});
 
     const updatedUser = await User.findOne({ username: data.username });
     if (!updatedUser) {
