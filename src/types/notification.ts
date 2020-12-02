@@ -8,7 +8,8 @@ export enum Operation {
   AcceptedRequest = "AcceptedRequest",
   RejectedRequest = "RejectedRequest",
   NewInvite = "NewInvite",
-  AcceptedInvite = "AcceptedInvite"
+  AcceptedInvite = "AcceptedInvite",
+  RejectedInvite = "RejectedInvite"
 }
 
 export type Notification = {

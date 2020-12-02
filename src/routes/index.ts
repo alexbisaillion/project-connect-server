@@ -1,6 +1,6 @@
 import { Router } from "express";;
 import { addUser, dismissNotification, getProjectRecommendationsForUser, getUser, getUsers, getUsersByUsernames, voteForSkill } from "../controllers/usersController"
-import { getProjects, addProject, registerInProject, inviteToProject, getProject, getUserRecommendationsForProject, requestToJoinProject, getProjectsByNames, acceptRequest, getMostRecentProjects, rejectRequest } from "../controllers/projectsController";
+import { getProjects, addProject, registerInProject, inviteToProject, getProject, getUserRecommendationsForProject, requestToJoinProject, getProjectsByNames, acceptRequest, getMostRecentProjects, rejectRequest, rejectInvite } from "../controllers/projectsController";
 import { isLoggedIn, login, logout } from "../controllers/authenticationController";
 import { getFrameworks, getProgrammingLanguages, getSkills } from "../controllers/attributeController";
 
@@ -29,6 +29,7 @@ router.post("/voteForSkill", voteForSkill);
 // Invite endpoints
 router.post("/inviteToProject", inviteToProject);
 router.post("/registerInProject", registerInProject);
+router.post("/rejectInvite", rejectInvite);
 
 // Join request endpoints
 router.post("/requestToJoinProject", requestToJoinProject);

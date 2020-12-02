@@ -329,6 +329,51 @@ export const rejectRequest = async (req: Request, res: Response): Promise<void> 
   }
 }
 
+export const rejectInvite = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const data = req.body;
+
+    const project = await Project.findOne({ name: data.name });
+    const user = await User.findOne({ username: data.username });
+
+    if (project === null) {
+      res.status(401).json({ error: "Invalid project" });
+      return;
+    }
+
+    if (user === null) {
+      res.status(401).json({ error: "Invalid user" });
+      return;
+    }
+
+    if (!project.invitees.includes(data.username) || !user.invitations.includes(data.name)) {
+      res.status(401).json({ error: "Not invited to project" });
+    }
+
+    // Do not add the user to the project users, just remove from the invitees 
+    await project.update({ $pull: { invitees: data.username }});
+
+    // Do not add the project to the user's projects, just remove the invite
+    await user.update({ $pull: { invitations: data.name }});
+
+    const creator = await User.findOne({ username: project.creator });
+    if (!creator) {
+      res.status(401).json({ error: "Could not notify creator" });
+      return;
+    }
+    await creator.update({ $push: { notifications: { sender: user.username, operation: Operation.RejectedInvite, timestamp: new Date(), project: project.name } } });
+
+    const updatedUser = await User.findOne({ username: data.username });
+    if (!updatedUser) {
+      res.status(401).json({ error: "Unable to find updated user"});
+    }
+  
+    res.status(201).json(updatedUser);  
+  } catch (error) {
+    res.status(401).json(error);
+  } 
+}
+
 export const getMostRecentProjects = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findOne({ username: req.body.username });
