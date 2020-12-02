@@ -30,6 +30,11 @@
     "dev-start": "concurrently \"tsc -w\" \"nodemon dist/js/app.js\"",
     "start": "node dist/js/app.js",
     "upload-users": "nodemon dist/js/data-generation/uploadNewUsers.js",
-    "upload-projects": "nodemon dist/js/data-generation/uploadNewProjects.js"
+    "upload-projects": "nodemon dist/js/data-generation/uploadNewProjects.js",
+    "update-passwords": "nodemon dist/js/data-generation/updatePasswords.js",
+    "collect-scores": "nodemon dist/js/data-generation/collectAllScores.js"
+  },
+  "nodemonConfig": {
+    "ignore": ["*.json"]
   }
 }
