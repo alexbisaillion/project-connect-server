@@ -383,7 +383,8 @@ export const getMostRecentProjects = async (req: Request, res: Response): Promis
     }
 
     const allUsers: IUser[] = await User.find();
-    const projects: IProject[] = await Project.find();
+    let projects: IProject[] = await Project.find();
+    projects = projects.filter(project => project.creator !== user.username);
     const mostRecentProjects = projects.sort((a, b) => a.startDate < b.startDate ? 1 : -1).slice(0, Math.min(10, projects.length));
     const recentProjectsWithScores = mostRecentProjects.reduce((projects, project) => {
       const score = getCompatibility(project, user, allUsers);
