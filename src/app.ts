@@ -19,7 +19,6 @@ app.use(session({
   secret: process.env.SECRET || "",
   store: new MongoDBStore({ uri, collection: "sessions"}),
   cookie: { 
-    maxAge: 600000,
     secure: process.env.SECURE_COOKIE?.toLowerCase() === "true",
     sameSite: process.env.SECURE_COOKIE?.toLowerCase() === "true" ? "none" : undefined
   },
