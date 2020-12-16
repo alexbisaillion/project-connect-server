@@ -21,14 +21,14 @@
 * The server can then be started by running `npm start`.
 * Alternatively, for development purposes, the server can be started by running `npm run dev-start`. This will launch nodemon, which will restart the server whenever file changes are saved.
   * If using nodemon, the environment variables described above can be set by providing a `nodemon.json` file with the following structure:
-  ```
-  {
-    "env": {
-        "SECRET": "some secret",
-        "MONGO_USER": "some username",
-        "MONGO_PASSWORD": "some password",
-        "MONGO_DB": "some db",
-        "SECURE_COOKIE": false
+    ```
+    {
+      "env": {
+          "SECRET": "some secret",
+          "MONGO_USER": "some username",
+          "MONGO_PASSWORD": "some password",
+          "MONGO_DB": "some db",
+          "SECURE_COOKIE": false
+      }
     }
-  }
-  ```
+    ```
